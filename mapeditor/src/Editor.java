@@ -8,23 +8,23 @@ import java.io.*;
 public class Editor {
 
     public static final int PADDING = 10;
-    public static final int CELLSIZE = 10;
+    public static final int CELLSIZE = 4;
     public static final int MAX_ROWS = 80;       //80;
     public static final int MAX_COLS = 100;   //100;
-    private Cell[][] coordenates;
+    private Cell[][] grid;
     private Cell cursor;
     private EditorKeyboardHandler editorKeyboardHandler;
     private Keyboard keyboard;
-    private String path = "/Users/codecadet/myGithub/mapeditor/myDraw";
-
+    private String path = "/Users/codecadet/myGithub/mapeditor/myDraw.txt";
+    private Color gridColor = Color.WHITE;
 
     public Editor() {
 
-        coordenates = new Cell[MAX_COLS][MAX_ROWS];
+        grid = new Cell[MAX_COLS][MAX_ROWS];
 
         for (int i = 0; i < MAX_COLS; i++) {
             for (int j = 0; j < MAX_ROWS; j++) {
-                coordenates[i][j] = new Cell(i, j);
+                grid[i][j] = new Cell(i, j);
             }
         }
 
@@ -32,13 +32,12 @@ public class Editor {
 
         editorKeyboardHandler = new EditorKeyboardHandler(this, cursor);
         keyboard = new Keyboard(editorKeyboardHandler);
-
     }
 
     public void init() {
 
         // draw grid
-        draw();
+        drawInitialGrid();
 
         // init cursor
         cursor.setColor(Color.BLUE);
@@ -48,44 +47,45 @@ public class Editor {
         keyboard.addEventListener(KeyboardEvent.KEY_DOWN, KeyboardEventType.KEY_PRESSED);
         keyboard.addEventListener(KeyboardEvent.KEY_LEFT, KeyboardEventType.KEY_PRESSED);
         keyboard.addEventListener(KeyboardEvent.KEY_RIGHT, KeyboardEventType.KEY_PRESSED);
-        keyboard.addEventListener(KeyboardEvent.KEY_SPACE, KeyboardEventType.KEY_PRESSED);
-        keyboard.addEventListener(KeyboardEvent.KEY_C, KeyboardEventType.KEY_PRESSED);
-        keyboard.addEventListener(KeyboardEvent.KEY_S, KeyboardEventType.KEY_PRESSED);
-        keyboard.addEventListener(KeyboardEvent.KEY_L, KeyboardEventType.KEY_PRESSED);
+        keyboard.addEventListener(KeyboardEvent.KEY_SPACE, KeyboardEventType.KEY_PRESSED);  // mark cell
+        keyboard.addEventListener(KeyboardEvent.KEY_C, KeyboardEventType.KEY_PRESSED);      // clear drawing
+        keyboard.addEventListener(KeyboardEvent.KEY_S, KeyboardEventType.KEY_PRESSED);      // save drawing
+        keyboard.addEventListener(KeyboardEvent.KEY_L, KeyboardEventType.KEY_PRESSED);      // load drawing
     }
 
-    public void draw(){
+    public void drawInitialGrid(){
         for (int i = 0; i < MAX_COLS; i++) {
             for (int j = 0; j < MAX_ROWS; j++) {
-                coordenates[i][j].draw();
+                grid[i][j].setColor(gridColor);
+                grid[i][j].draw();
             }
         }
     }
 
-    public void fill(){
+    public void drawDrawing(){
         for (int i = 0; i < MAX_COLS; i++) {
             for (int j = 0; j < MAX_ROWS; j++) {
-                if (coordenates[i][j].isMarked()) {
-                    coordenates[i][j].fill();
-                }
-            }
-        }
-    }
-    public void markCell(int col, int row) {
-        coordenates[col][row].mark();
-    }
-
-    public void clear() {
-        for (int i = 0; i < MAX_COLS; i++) {
-            for (int j = 0; j < MAX_ROWS; j++) {
-                if (coordenates[i][j].isMarked()) {
-                    coordenates[i][j].draw();
+                if (grid[i][j].isMarked()) {
+                    grid[i][j].fill();
                 }
             }
         }
     }
 
-    public void save() {
+
+    public void clearAllCells() {
+        for (int i = 0; i < MAX_COLS; i++) {
+            for (int j = 0; j < MAX_ROWS; j++) {
+                if (grid[i][j].isMarked()){
+                    unMarkCell(i, j);
+                    grid[i][j].setColor(gridColor);
+                    grid[i][j].draw();
+                }
+            }
+        }
+    }
+
+    public void saveDrawing() {
         String line = "";
 
         try {
@@ -94,7 +94,7 @@ public class Editor {
 
             for (int j = 0; j < MAX_ROWS; j++) {
                 for (int i = 0; i < MAX_COLS; i++) {
-                    line = coordenates[i][j].isMarked() ? line + "1" : line + "0";
+                    line = grid[i][j].isMarked() ? line + "1" : line + "0";
                 }
 
                 bufferedWriter.write(line);
@@ -109,7 +109,7 @@ public class Editor {
         }
     }
 
-    public void load(){
+    public void loadDrawing(){
 
         String line;
 
@@ -117,31 +117,32 @@ public class Editor {
             FileReader reader = new FileReader(path);
             BufferedReader bufferedReader = new BufferedReader(reader);
 
-            clearAll();
+            clearAllCells();
 
             for (int j = 0; j < MAX_ROWS; j++) {
                 line = bufferedReader.readLine();
                 for (int i = 0; i < MAX_COLS; i++) {
                     if (line.charAt(i) == '1'){
-                        coordenates[i][j].mark();
+                        markCell(i, j);
                     }
                 }
             }
 
-            fill();
+            drawDrawing();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void clearAll() {
-        for (int i = 0; i < MAX_COLS; i++) {
-            for (int j = 0; j < MAX_ROWS; j++) {
-                coordenates[i][j].unMark();
-            }
-        }
+
+
+    public void markCell(int col, int row) {
+        grid[col][row].mark();
     }
 
+    public void unMarkCell(int col, int row) {
+        grid[col][row].mark();
+    }
 
 }

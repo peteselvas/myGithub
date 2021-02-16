@@ -35,13 +35,13 @@ public class EditorKeyboardHandler implements KeyboardHandler {
                 editor.markCell(cursor.getCol(), cursor.getRow());
                 break;
             case KeyboardEvent.KEY_C:
-                editor.clear();
+                editor.clearAllCells();
                 break;
             case KeyboardEvent.KEY_S:
-                editor.save();
+                editor.saveDrawing();
                 break;
             case KeyboardEvent.KEY_L:
-                editor.load();
+                editor.loadDrawing();
                 break;
 
 

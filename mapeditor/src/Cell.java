@@ -8,7 +8,7 @@ public class Cell {
     private Rectangle rectangle;
     private boolean isMarked;
 
-    public Cell(int col, int row){
+    public Cell(int col, int row) {
         this.col = col;
         this.row = row;
         this.rectangle = new Rectangle(col * Editor.CELLSIZE + Editor.PADDING,
@@ -19,62 +19,58 @@ public class Cell {
     }
 
 
-    public void draw(){
+    public void draw() {
         this.rectangle.draw();
     }
 
-    public void fill(){
+    public void fill() {
         this.rectangle.fill();
     }
 
-    public void delete(){
+    public void delete() {
         this.rectangle.delete();
     }
 
-    public void setColor(Color color){
+    public void setColor(Color color) {
         this.rectangle.setColor(color);
     }
 
-    public Color getColor(){
+    public Color getColor() {
         return this.rectangle.getColor();
     }
 
 
-    public void moveUP(){
-        if(row == 0){       // top border
+    public void moveUP() {
+        if (row == 0) {       // top border
             return;
         }
         row--;
         rectangle.translate(0, -Editor.CELLSIZE);
     }
 
-    public void moveDown(){
-        if(row == Editor.MAX_ROWS - 1){     // bottom border
+    public void moveDown() {
+        if (row == Editor.MAX_ROWS - 1) {     // bottom border
             return;
         }
         row++;
         rectangle.translate(0, Editor.CELLSIZE);
     }
 
-    public void moveLeft(){
-        if(col == 0){       // left border
+    public void moveLeft() {
+        if (col == 0) {       // left border
             return;
         }
         col--;
         rectangle.translate(-Editor.CELLSIZE, 0);
     }
 
-    public void moveRight(){
-        if(col == Editor.MAX_COLS - 1){     // right border
+    public void moveRight() {
+        if (col == Editor.MAX_COLS - 1) {     // right border
             return;
         }
         col++;
         rectangle.translate(Editor.CELLSIZE, 0);
     }
-
-
-
-
 
 
     public int getCol() {
@@ -107,12 +103,16 @@ public class Cell {
     }
 
     public void mark() {
-        isMarked = true;
-        rectangle.setColor(Color.BLACK);
+        isMarked = !isMarked;
+        if (isMarked) {
+            rectangle.setColor(Color.BLACK);
+        } else {
+            rectangle.setColor(Color.WHITE);
+        }
         rectangle.fill();
     }
 
-    public void unMark(){
+    public void unMark() {
         isMarked = false;
     }
 
