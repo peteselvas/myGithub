@@ -21,12 +21,12 @@ public class Client {
     public static void main(String[] args) {
 
         InetAddress inetAddress;
-        //int port = 7000;
-        int port = 50666;
+        int port = 7000;
+        //int port = 50666;
 
         try {
-            //inetAddress = InetAddress.getByName("localhost");
-            inetAddress = InetAddress.getByName("192.168.1.137");
+            inetAddress = InetAddress.getByName("localhost");
+            //inetAddress = InetAddress.getByName("192.168.1.137");
             Socket socket = new Socket(inetAddress, port);
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
