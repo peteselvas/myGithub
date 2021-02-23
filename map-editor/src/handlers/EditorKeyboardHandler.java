@@ -1,13 +1,17 @@
+package handlers;
+
+import Editor.Editor;
+import cell.Cursor;
 import org.academiadecodigo.simplegraphics.keyboard.KeyboardEvent;
 import org.academiadecodigo.simplegraphics.keyboard.KeyboardHandler;
 
 public class EditorKeyboardHandler implements KeyboardHandler {
 
     private Editor editor;
-    private Cell cursor;
+    private Cursor cursor;
 
 
-    public EditorKeyboardHandler(Editor editor, Cell cursor) {
+    public EditorKeyboardHandler(Editor editor, Cursor cursor) {
         this.editor = editor;
         this.cursor = cursor;
     }
@@ -32,7 +36,13 @@ public class EditorKeyboardHandler implements KeyboardHandler {
                 cursor.moveRight();
                 break;
             case KeyboardEvent.KEY_SPACE:
-                editor.markCell(cursor.getCol(), cursor.getRow());
+                editor.perform();
+                break;
+            case KeyboardEvent.KEY_U:
+                editor.unPerform();
+                break;
+            case KeyboardEvent.KEY_R:
+                editor.rePerform();
                 break;
             case KeyboardEvent.KEY_C:
                 editor.clearAllCells();
@@ -43,9 +53,6 @@ public class EditorKeyboardHandler implements KeyboardHandler {
             case KeyboardEvent.KEY_L:
                 editor.loadDrawing();
                 break;
-
-
-
         }
 
         cursor.fill();

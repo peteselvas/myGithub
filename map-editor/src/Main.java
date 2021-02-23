@@ -1,4 +1,6 @@
-public class MapEditor {
+import Editor.Editor;
+
+public class Main {
 
 
     public static void main(String[] args) {
